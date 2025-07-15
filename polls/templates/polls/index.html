@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PollZone - Your Opinion Matters!</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .container {
+      margin-top: 60px;
+    }
+    .poll-card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+    .btn-vote {
+      background-color: #007bff;
+      color: white;
+      border-radius: 25px;
+      padding: 8px 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .no-polls {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+
+    :root {
+      --bg-color: #f3f8ff;
+      --text-color: #343a40;
+      --card-bg: #ffffff;
+    }
+    .dark-theme {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --card-bg: #1e1e1e;
+    }
+  </style>
+</head>
+<body class="light-theme">
+  <div class="theme-toggle">
+    <button class="btn btn-outline-secondary btn-sm" onclick="toggleTheme()">🌓 Toggle Theme</button>
+  </div>
+
+  <div class="container" id="main">
+    <h1 class="text-center mb-4">🗳️ What's on your mind today?</h1>
+
+    {% if latest_question_list %}
+      {% for question in latest_question_list %}
+        <div class="poll-card">
+          <h4>{{ question.question_text }}</h4>
+          <a href="{% url 'polls:detail' question.id %}" class="btn btn-vote mt-2">Vote Now</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center no-polls">No active polls right now. Come back soon!</p>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark-theme');
+    }
+
+    function updateTheme() {
+      const style = getComputedStyle(document.body);
+      document.body.style.backgroundColor = style.getPropertyValue('--bg-color');
+      document.body.style.color = style.getPropertyValue('--text-color');
+    }
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    updateTheme();
+  </script>
+</body>
+</html>

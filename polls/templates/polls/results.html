@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Results</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body class="has-background-light">
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Results for: {{ question.question_text }}</h1>
+      <ul>
+        {% for choice in question.choice_set.all %}
+          <li>{{ choice.choice_text }} — <strong>{{ choice.votes }}</strong> vote{{ choice.votes|pluralize }}</li>
+        {% endfor %}
+      </ul>
+      <a class="button is-link mt-4" href="{% url 'polls:index' %}">Back to Polls</a>
+    </div>
+  </section>
+</body>
+</html>

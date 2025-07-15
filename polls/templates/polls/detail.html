@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Poll Detail</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body class="has-background-light">
+  <section class="section">
+    <div class="container">
+      <h1 class="title">{{ question.question_text }}</h1>
+      {% if error_message %}<p class="has-text-danger">{{ error_message }}</p>{% endif %}
+
+      <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        {% for choice in question.choice_set.all %}
+          <div class="field">
+            <label class="radio">
+              <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+              {{ choice.choice_text }}
+            </label>
+          </div>
+        {% endfor %}
+        <button class="button is-primary mt-3" type="submit">Vote</button>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
