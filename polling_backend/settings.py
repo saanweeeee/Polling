@@ -205,16 +205,17 @@
 
 # # Enable WhiteNoise to serve static files
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-import os
 from pathlib import Path
+import os
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-your-secret-key")
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECRET_KEY = 'django-insecure-your-secret-key'
 
-ALLOWED_HOSTS = ["polling-django.onrender.com"]  # or use your custom domain
+DEBUG = True
+
+ALLOWED_HOSTS = ["polling-django.onrender.com"]  # ✅ No https:// or /polls/
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -228,7 +229,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # 🧊 Enables static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Required for static files on Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -241,7 +242,7 @@ ROOT_URLCONF = 'polling_backend.urls'
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [BASE_DIR / 'templates'],  # Optional: template folder if used
+    'DIRS': [],
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
@@ -255,24 +256,17 @@ TEMPLATES = [{
 
 WSGI_APPLICATION = 'polling_backend.wsgi.application'
 
-# DATABASE (default SQLite or Render-provided via DATABASE_URL)
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', conn_max_age=600)
+    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
-# Password validators (you can add more if needed)
 AUTH_PASSWORD_VALIDATORS = []
 
-# Localization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files config
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ For collecting static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Default primary key
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
