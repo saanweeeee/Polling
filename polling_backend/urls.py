@@ -16,8 +16,11 @@
 # ]
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda request: redirect('polls/', permanent=True)),  # Redirect root URL to /polls/
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
 ]
+
